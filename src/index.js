@@ -11,7 +11,7 @@ im.convert(['-size', '128x128', 'xc:#ff0000', 'test.jpg'], (err, stdout) => {
 });
 */
 
-createImageMagickParams = (params) => {
+const createImageMagickParams = (params) => {
   const {
     outputFileName,
     size,
@@ -32,6 +32,15 @@ const emptyValidator = (name) => {
   return true;
 };
 
+const imageSizeValidator = (size) => {
+  if (!size) return 'Empty input!';
+  const sizes = size.split('x').map((s) => parseInt(s));
+  const width = sizes[0];
+  const height = sizes[1];
+  if (!Number.isInteger(width) || !Number.isInteger(height)) return 'Input [width(Integer)]x[height(Integer)].';
+  return true;
+}
+
 /**
  * type: create image with strings
  *
@@ -42,6 +51,13 @@ const createImageQuestions = [
     name: 'outputFileName',
     message: 'Input new image file name',
     validate: emptyValidator
+  },
+  {
+    type: 'input',
+    name: 'imageSize',
+    message: 'Input image size',
+    default: '128x128',
+    validate: imageSizeValidator
   },
   {
     type: 'list',
