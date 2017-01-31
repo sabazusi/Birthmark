@@ -11,6 +11,21 @@ im.convert(['-size', '128x128', 'xc:#ff0000', 'test.jpg'], (err, stdout) => {
 });
 */
 
+createImageMagickParams = (params) => {
+  const {
+    outputFileName,
+    size,
+    text,
+    textColor,
+    backgroundColor
+  } = params;
+  return [
+    '-size',
+    size,
+    `xc:${backgroundColor}`,
+    outputFileName
+  ];
+};
 
 const emptyValidator = (name) => {
   if (!name) return 'Empty input!';
@@ -56,3 +71,4 @@ const createImageQuestions = [
 
 inquirer.prompt(createImageQuestions)
   .then((answer) => console.log(answer));
+
