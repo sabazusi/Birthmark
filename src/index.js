@@ -14,6 +14,7 @@ im.convert(['-size', '128x128', 'xc:#ff0000', 'test.jpg'], (err, stdout) => {
 const createImageMagickParams = (params) => {
   const {
     outputFileName,
+    font,
     size,
     text,
     textColor,
@@ -82,9 +83,14 @@ const createImageQuestions = [
     name: 'backgroundColor',
     message: 'Input background color code for image',
     "default": '#ffffff'
+  },
+  {
+    type: 'input',
+    name: 'font',
+    message: 'Input font name for text',
+    "default": 'Meiryo'
   }
 ];
 
 inquirer.prompt(createImageQuestions)
   .then((answer) => console.log(answer));
-
