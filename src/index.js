@@ -1,31 +1,25 @@
 import im from 'imagemagick';
 import inquirer from 'inquirer';
 
-/**
-im.convert(['-size', '128x128', 'xc:#ff0000', 'test.jpg'], (err, stdout) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log(stdout);
-  }
-});
-*/
-
 const createImageMagickParams = (params) => {
   const {
     outputFileName,
+    outputFileType,
     font,
-    size,
-    text,
+    imageSize,
+    embedText,
     textColor,
     backgroundColor
   } = params;
-  return [
-    '-size',
-    size,
-    `xc:${backgroundColor}`,
-    outputFileName
-  ];
+  return {
+    background: backgroundColor,
+    fill: textColor,
+    size: imageSize,
+    gravity: 'center',
+    label: embedText,
+    output: `${outputFileName}.${outputFileType}`,
+    font
+  };
 };
 
 const emptyValidator = (name) => {
@@ -76,21 +70,47 @@ const createImageQuestions = [
     type: 'input',
     name: 'textColor',
     message: 'Input text color code for image',
-    "default": '#000000'
+    default: '#000000'
   },
   {
     type: 'input',
     name: 'backgroundColor',
     message: 'Input background color code for image',
-    "default": '#ffffff'
+    default: '#ffffff'
   },
   {
     type: 'input',
     name: 'font',
     message: 'Input font name for text',
-    "default": 'Meiryo'
+    default: 'Meiryo'
   }
 ];
 
 inquirer.prompt(createImageQuestions)
-  .then((answer) => console.log(answer));
+  .then((answer) => createImageMagickParams(answer))
+  .then((answerObj) => {
+    let params = [];
+    let output = '';
+    Object.keys(answerObj).forEach((key) => {
+      if (key === 'label') {
+        params.push(`label:${answerObj[key]}`);
+      } else if(key === 'output') {
+        output = answerObj[key];
+      } else {
+        params.push(`-${key}`);
+        params.push(answerObj[key]);
+      }
+    });
+    if (!output) {
+      console.log('Error: no output file name...');
+    } else {
+      params.push(output);
+      im.convert(params, (err, stdout) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log('ok_woman');
+        }
+      });
+    }
+  });
