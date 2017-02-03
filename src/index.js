@@ -1,5 +1,14 @@
 import im from 'imagemagick';
 import inquirer from 'inquirer';
+import fontManager from 'font-manager';
+
+const fontMap = fontManager.getAvailableFontsSync()
+  .map((font) => {
+    return {
+      name: font.postscriptName,
+      path: font.path
+    }
+  });
 
 const createImageMagickParams = (params) => {
   const {
