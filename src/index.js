@@ -91,7 +91,7 @@ const createImageQuestions = [
     type: 'input',
     name: 'font',
     message: 'Input font name for text',
-    default: 'Meiryo'
+    default: 'Osaka'
   }
 ];
 
