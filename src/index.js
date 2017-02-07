@@ -10,6 +10,8 @@ const fontMap = fontManager.getAvailableFontsSync()
     }
   });
 
+const hasMultibyteCharacter = (str) => str.match(/^[\u30A0-\u30FF]+$/) === null;
+
 const createImageMagickParams = (params) => {
   const {
     outputFileName,
