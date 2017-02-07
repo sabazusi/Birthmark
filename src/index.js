@@ -21,13 +21,13 @@ const createImageMagickParams = (params) => {
     backgroundColor
   } = params;
   return {
+    font,
     background: backgroundColor,
     fill: textColor,
     size: imageSize,
     gravity: 'center',
     label: embedText,
-    output: `${outputFileName}.${outputFileType}`,
-    font
+    output: `${outputFileName}.${outputFileType}`
   };
 };
 
