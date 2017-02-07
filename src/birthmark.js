@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import im from 'imagemagick';
 import inquirer from 'inquirer';
 import fontManager from 'font-manager';
