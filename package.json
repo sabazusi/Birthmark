@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sabazusi/Birthmark.git"
+    "url": "git+https://github.com/sabazusi/birthmark.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/sabazusi/Birthmark/issues"
+    "url": "https://github.com/sabazusi/birthmark/issues"
   },
-  "homepage": "https://github.com/sabazusi/Birthmark#readme",
+  "homepage": "https://github.com/sabazusi/birthmark#readme",
   "devDependencies": {
     "babel-cli": "^6.22.2",
     "babel-core": "^6.22.1",
