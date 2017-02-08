@@ -1,6 +1,9 @@
-Birthmark
+birthmark
 ====
 Command line tool for generating image that embedded text.
+
+### Dependencies
+- [ImageMagick](https://github.com/ImageMagick/ImageMagick "ImageMagick")
 
 ### Install
 ***todo: publish to npm***
