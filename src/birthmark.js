@@ -25,7 +25,7 @@ const createImageMagickParams = (params) => {
     backgroundColor
   } = params;
   return {
-    font,
+    font: fontMap.find(f => f.name === font).path,
     background: backgroundColor,
     fill: textColor,
     size: imageSize,

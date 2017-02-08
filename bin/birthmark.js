@@ -36,7 +36,9 @@ var createImageMagickParams = function createImageMagickParams(params) {
       backgroundColor = params.backgroundColor;
 
   return {
-    font: font,
+    font: fontMap.find(function (f) {
+      return f.name === font;
+    }).path,
     background: backgroundColor,
     fill: textColor,
     size: imageSize,
