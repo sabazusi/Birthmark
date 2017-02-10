@@ -48,6 +48,16 @@ var createImageMagickParams = function createImageMagickParams(params) {
   };
 };
 
+var mode = 'create';
+var args = process.argv.slice(1);
+if (args.indexOf('-h') !== -1) {
+  mode = 'help';
+} else if (args.indexOf('-s') !== -1) {
+  mode = 'slack';
+}
+
+console.log(mode);
+
 var emptyValidator = function emptyValidator(name) {
   if (!name) return 'Empty input!';
   return true;
@@ -74,7 +84,6 @@ var fontValidator = function fontValidator(fontName) {
 
 /**
  * type: create image with strings
- *
  */
 var createImageQuestions = [{
   type: 'input',

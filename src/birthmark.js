@@ -35,6 +35,14 @@ const createImageMagickParams = (params) => {
   };
 };
 
+let mode = 'create';
+const args = process.argv.slice(1);
+if (args.includes('-h')) {
+  mode = 'help';
+} else if (args.includes('-s')) {
+  mode = 'slack';
+}
+
 const emptyValidator = (name) => {
   if (!name) return 'Empty input!';
   return true;
@@ -57,7 +65,6 @@ const fontValidator = (fontName) => {
 
 /**
  * type: create image with strings
- *
  */
 const createImageQuestions = [
   {
