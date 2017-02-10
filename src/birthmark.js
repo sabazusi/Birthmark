@@ -49,6 +49,12 @@ const imageSizeValidator = (size) => {
   return true;
 }
 
+const fontValidator = (fontName) => {
+  const targetFont = fontMap.find(f => f.name === fontName);
+  if (!targetFont) return 'Invalid font name';
+  return true;
+}
+
 /**
  * type: create image with strings
  *
@@ -95,7 +101,8 @@ const createImageQuestions = [
     type: 'input',
     name: 'font',
     message: 'Input font name for text',
-    default: 'Osaka'
+    default: 'Osaka',
+    validate: fontValidator
   }
 ];
 

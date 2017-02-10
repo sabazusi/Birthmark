@@ -64,6 +64,14 @@ var imageSizeValidator = function imageSizeValidator(size) {
   return true;
 };
 
+var fontValidator = function fontValidator(fontName) {
+  var targetFont = fontMap.find(function (f) {
+    return f.name === fontName;
+  });
+  if (!targetFont) return 'Invalid font name';
+  return true;
+};
+
 /**
  * type: create image with strings
  *
@@ -103,7 +111,8 @@ var createImageQuestions = [{
   type: 'input',
   name: 'font',
   message: 'Input font name for text',
-  default: 'Osaka'
+  default: 'Osaka',
+  validate: fontValidator
 }];
 
 _inquirer2.default.prompt(createImageQuestions).then(function (answer) {
