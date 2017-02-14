@@ -9,18 +9,11 @@ var _inquirer = require('inquirer');
 
 var _inquirer2 = _interopRequireDefault(_inquirer);
 
-var _fontManager = require('font-manager');
+var _font = require('./font');
 
-var _fontManager2 = _interopRequireDefault(_fontManager);
+var _font2 = _interopRequireDefault(_font);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var fontMap = _fontManager2.default.getAvailableFontsSync().map(function (font) {
-  return {
-    name: font.postscriptName,
-    path: font.path
-  };
-});
 
 var hasMultibyteCharacter = function hasMultibyteCharacter(str) {
   return str.match(/^[\u30A0-\u30FF]+$/) === null;
@@ -29,15 +22,15 @@ var hasMultibyteCharacter = function hasMultibyteCharacter(str) {
 var createImageMagickParams = function createImageMagickParams(params) {
   var outputFileName = params.outputFileName,
       outputFileType = params.outputFileType,
-      font = params.font,
+      fontName = params.fontName,
       imageSize = params.imageSize,
       embedText = params.embedText,
       textColor = params.textColor,
       backgroundColor = params.backgroundColor;
 
   return {
-    font: fontMap.find(function (f) {
-      return f.name === font;
+    font: _font2.default.availables.find(function (f) {
+      return f.name === fontName;
     }).path,
     background: backgroundColor,
     fill: textColor,
@@ -56,8 +49,6 @@ if (args.indexOf('-h') !== -1) {
   mode = 'slack';
 }
 
-console.log(mode);
-
 var emptyValidator = function emptyValidator(name) {
   if (!name) return 'Empty input!';
   return true;
@@ -75,7 +66,7 @@ var imageSizeValidator = function imageSizeValidator(size) {
 };
 
 var fontValidator = function fontValidator(fontName) {
-  var targetFont = fontMap.find(function (f) {
+  var targetFont = _font2.default.availables.find(function (f) {
     return f.name === fontName;
   });
   if (!targetFont) return 'Invalid font name';
@@ -118,7 +109,7 @@ var createImageQuestions = [{
   default: '#ffffff'
 }, {
   type: 'input',
-  name: 'font',
+  name: 'fontName',
   message: 'Input font name for text',
   default: 'Osaka',
   validate: fontValidator

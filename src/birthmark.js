@@ -2,15 +2,7 @@
 
 import im from 'imagemagick';
 import inquirer from 'inquirer';
-import fontManager from 'font-manager';
-
-const fontMap = fontManager.getAvailableFontsSync()
-  .map((font) => {
-    return {
-      name: font.postscriptName,
-      path: font.path
-    }
-  });
+import font from './font';
 
 const hasMultibyteCharacter = (str) => str.match(/^[\u30A0-\u30FF]+$/) === null;
 
@@ -18,14 +10,14 @@ const createImageMagickParams = (params) => {
   const {
     outputFileName,
     outputFileType,
-    font,
+    fontName,
     imageSize,
     embedText,
     textColor,
     backgroundColor
   } = params;
   return {
-    font: fontMap.find(f => f.name === font).path,
+    font: font.availables.find(f => f.name === fontName).path,
     background: backgroundColor,
     fill: textColor,
     size: imageSize,
@@ -58,7 +50,7 @@ const imageSizeValidator = (size) => {
 }
 
 const fontValidator = (fontName) => {
-  const targetFont = fontMap.find(f => f.name === fontName);
+  const targetFont = font.availables.find(f => f.name === fontName);
   if (!targetFont) return 'Invalid font name';
   return true;
 }
@@ -106,7 +98,7 @@ const createImageQuestions = [
   },
   {
     type: 'input',
-    name: 'font',
+    name: 'fontName',
     message: 'Input font name for text',
     default: 'Osaka',
     validate: fontValidator
