@@ -9,11 +9,20 @@ var _inquirer = require('inquirer');
 
 var _inquirer2 = _interopRequireDefault(_inquirer);
 
+var _commander = require('commander');
+
+var _commander2 = _interopRequireDefault(_commander);
+
 var _font = require('./font');
 
 var _font2 = _interopRequireDefault(_font);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// setup help
+_commander2.default.version('0.1.0').option('-s --slack', 'Create image and upload to slack').parse(process.argv);
+
+var isUploadToSlack = _commander2.default.slack === true;
 
 var hasMultibyteCharacter = function hasMultibyteCharacter(str) {
   return str.match(/^[\u30A0-\u30FF]+$/) === null;
@@ -40,15 +49,6 @@ var createImageMagickParams = function createImageMagickParams(params) {
     output: outputFileName + '.' + outputFileType
   };
 };
-
-var mode = 'create';
-var args = process.argv.slice(1);
-if (args.indexOf('-h') !== -1) {
-  mode = 'help';
-} else if (args.indexOf('-s') !== -1) {
-  mode = 'slack';
-}
-
 var emptyValidator = function emptyValidator(name) {
   if (!name) return 'Empty input!';
   return true;

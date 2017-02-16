@@ -2,7 +2,16 @@
 
 import im from 'imagemagick';
 import inquirer from 'inquirer';
+import program from 'commander';
 import font from './font';
+
+// setup help
+program
+  .version('0.1.0')
+  .option('-s --slack', 'Create image and upload to slack')
+  .parse(process.argv);
+
+const isUploadToSlack = program.slack === true;
 
 const hasMultibyteCharacter = (str) => str.match(/^[\u30A0-\u30FF]+$/) === null;
 
@@ -26,15 +35,6 @@ const createImageMagickParams = (params) => {
     output: `${outputFileName}.${outputFileType}`
   };
 };
-
-let mode = 'create';
-const args = process.argv.slice(1);
-if (args.includes('-h')) {
-  mode = 'help';
-} else if (args.includes('-s')) {
-  mode = 'slack';
-}
-
 const emptyValidator = (name) => {
   if (!name) return 'Empty input!';
   return true;
