@@ -3,7 +3,8 @@
 import im from 'imagemagick';
 import inquirer from 'inquirer';
 import program from 'commander';
-import font from './font';
+import fonts from './fonts';
+import * as validators from './validators';
 
 // setup help
 program
@@ -26,7 +27,7 @@ const createImageMagickParams = (params) => {
     backgroundColor
   } = params;
   return {
-    font: font.availables.find(f => f.name === fontName).path,
+    font: fonts.availables.find(f => f.name === fontName).path,
     background: backgroundColor,
     fill: textColor,
     size: imageSize,
@@ -35,25 +36,6 @@ const createImageMagickParams = (params) => {
     output: `${outputFileName}.${outputFileType}`
   };
 };
-const emptyValidator = (name) => {
-  if (!name) return 'Empty input!';
-  return true;
-};
-
-const imageSizeValidator = (size) => {
-  if (!size) return 'Empty input!';
-  const sizes = size.split('x').map((s) => parseInt(s));
-  const width = sizes[0];
-  const height = sizes[1];
-  if (!Number.isInteger(width) || !Number.isInteger(height)) return 'Input [width(Integer)]x[height(Integer)].';
-  return true;
-}
-
-const fontValidator = (fontName) => {
-  const targetFont = font.availables.find(f => f.name === fontName);
-  if (!targetFont) return 'Invalid font name';
-  return true;
-}
 
 /**
  * type: create image with strings
@@ -63,14 +45,14 @@ const createImageQuestions = [
     type: 'input',
     name: 'outputFileName',
     message: 'Input new image file name',
-    validate: emptyValidator
+    validate: validators.empty
   },
   {
     type: 'input',
     name: 'imageSize',
     message: 'Input image size',
     default: '128x128',
-    validate: imageSizeValidator
+    validate: validators.imageSize
   },
   {
     type: 'list',
@@ -82,7 +64,7 @@ const createImageQuestions = [
     type: 'input',
     name: 'embedText',
     message: 'Input string that embed in image',
-    validate: emptyValidator
+    validate: validators.empty
   },
   {
     type: 'input',
@@ -101,7 +83,7 @@ const createImageQuestions = [
     name: 'fontName',
     message: 'Input font name for text',
     default: 'Osaka',
-    validate: fontValidator
+    validate: validators.font
   }
 ];
 

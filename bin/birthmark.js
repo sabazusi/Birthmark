@@ -13,9 +13,15 @@ var _commander = require('commander');
 
 var _commander2 = _interopRequireDefault(_commander);
 
-var _font = require('./font');
+var _fonts = require('./fonts');
 
-var _font2 = _interopRequireDefault(_font);
+var _fonts2 = _interopRequireDefault(_fonts);
+
+var _validators = require('./validators');
+
+var validators = _interopRequireWildcard(_validators);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -38,7 +44,7 @@ var createImageMagickParams = function createImageMagickParams(params) {
       backgroundColor = params.backgroundColor;
 
   return {
-    font: _font2.default.availables.find(function (f) {
+    font: _fonts2.default.availables.find(function (f) {
       return f.name === fontName;
     }).path,
     background: backgroundColor,
@@ -49,29 +55,6 @@ var createImageMagickParams = function createImageMagickParams(params) {
     output: outputFileName + '.' + outputFileType
   };
 };
-var emptyValidator = function emptyValidator(name) {
-  if (!name) return 'Empty input!';
-  return true;
-};
-
-var imageSizeValidator = function imageSizeValidator(size) {
-  if (!size) return 'Empty input!';
-  var sizes = size.split('x').map(function (s) {
-    return parseInt(s);
-  });
-  var width = sizes[0];
-  var height = sizes[1];
-  if (!Number.isInteger(width) || !Number.isInteger(height)) return 'Input [width(Integer)]x[height(Integer)].';
-  return true;
-};
-
-var fontValidator = function fontValidator(fontName) {
-  var targetFont = _font2.default.availables.find(function (f) {
-    return f.name === fontName;
-  });
-  if (!targetFont) return 'Invalid font name';
-  return true;
-};
 
 /**
  * type: create image with strings
@@ -80,13 +63,13 @@ var createImageQuestions = [{
   type: 'input',
   name: 'outputFileName',
   message: 'Input new image file name',
-  validate: emptyValidator
+  validate: validators.empty
 }, {
   type: 'input',
   name: 'imageSize',
   message: 'Input image size',
   default: '128x128',
-  validate: imageSizeValidator
+  validate: validators.imageSize
 }, {
   type: 'list',
   name: 'outputFileType',
@@ -96,7 +79,7 @@ var createImageQuestions = [{
   type: 'input',
   name: 'embedText',
   message: 'Input string that embed in image',
-  validate: emptyValidator
+  validate: validators.empty
 }, {
   type: 'input',
   name: 'textColor',
@@ -112,7 +95,7 @@ var createImageQuestions = [{
   name: 'fontName',
   message: 'Input font name for text',
   default: 'Osaka',
-  validate: fontValidator
+  validate: validators.font
 }];
 
 _inquirer2.default.prompt(createImageQuestions).then(function (answer) {
