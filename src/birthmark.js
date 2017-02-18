@@ -107,9 +107,9 @@ inquirer.prompt(createImageQuestions)
       params.push(output);
       im.convert(params, (err, stdout) => {
         if (err) {
-          console.log(err);
+          console.log(`Error: ${err.toString()}`);
         } else {
-          console.log('ok_woman');
+          console.log('Created!');
         }
       });
     }
