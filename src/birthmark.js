@@ -82,7 +82,6 @@ const createImageQuestions = [
     type: 'input',
     name: 'fontName',
     message: 'Input font name for text',
-    default: 'Osaka',
     validate: validators.font
   }
 ];
