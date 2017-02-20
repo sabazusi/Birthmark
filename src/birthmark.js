@@ -109,7 +109,7 @@ inquirer.prompt(createImageQuestions)
         if (err) {
           console.log(`Error: ${err.toString()}`);
         } else {
-          console.log('Created!');
+          console.log(`Created! -> ${answerObj['output']}`);
         }
       });
     }

@@ -94,7 +94,6 @@ var createImageQuestions = [{
   type: 'input',
   name: 'fontName',
   message: 'Input font name for text',
-  default: 'Osaka',
   validate: validators.font
 }];
 
@@ -119,9 +118,9 @@ _inquirer2.default.prompt(createImageQuestions).then(function (answer) {
     params.push(output);
     _imagemagick2.default.convert(params, function (err, stdout) {
       if (err) {
-        console.log(err);
+        console.log('Error: ' + err.toString());
       } else {
-        console.log('ok_woman');
+        console.log('Created! -> ' + answerObj['output']);
       }
     });
   }
