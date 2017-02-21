@@ -8,11 +8,7 @@ const availableFonts = fontManager.getAvailableFontsSync()
     }
   });
 
-const getSuggestion = () => {
-};
-
 const font = {
-  suggested: getSuggestion(),
   availables: availableFonts
 };
 

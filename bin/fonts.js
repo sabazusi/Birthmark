@@ -17,10 +17,7 @@ var availableFonts = _fontManager2.default.getAvailableFontsSync().map(function 
   };
 });
 
-var getSuggestion = function getSuggestion() {};
-
 var font = {
-  suggested: getSuggestion(),
   availables: availableFonts
 };
 

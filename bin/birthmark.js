@@ -37,16 +37,12 @@ var hasMultibyteCharacter = function hasMultibyteCharacter(str) {
 var createImageMagickParams = function createImageMagickParams(params) {
   var outputFileName = params.outputFileName,
       outputFileType = params.outputFileType,
-      fontName = params.fontName,
       imageSize = params.imageSize,
       embedText = params.embedText,
       textColor = params.textColor,
       backgroundColor = params.backgroundColor;
 
   return {
-    font: _fonts2.default.availables.find(function (f) {
-      return f.name === fontName;
-    }).path,
     background: backgroundColor,
     fill: textColor,
     size: imageSize,
@@ -90,26 +86,37 @@ var createImageQuestions = [{
   name: 'backgroundColor',
   message: 'Input background color code for image',
   default: '#ffffff'
-}, {
-  type: 'input',
-  name: 'fontName',
-  message: 'Input font name for text',
-  validate: validators.font
 }];
 
-_inquirer2.default.prompt(createImageQuestions).then(function (answer) {
-  return createImageMagickParams(answer);
-}).then(function (answerObj) {
+var fontSelectionModeQuestion = [{
+  type: 'list',
+  name: 'fontSelectionType',
+  message: 'Select font name selection method',
+  choices: ['Use default font by imagemagick', 'Input font name directly', 'Select font from available fonts list']
+}];
+
+var fontSelectionQuestions = {
+  'Use default font by imagemagick': [],
+  'Input font name directly': [{
+    type: 'input',
+    name: 'fontName',
+    message: 'Input font name',
+    validate: validators.font
+  }],
+  'Select font from available fonts list': []
+};
+
+var createImage = function createImage(answer) {
   var params = [];
   var output = '';
-  Object.keys(answerObj).forEach(function (key) {
+  Object.keys(answer).forEach(function (key) {
     if (key === 'label') {
-      params.push('label:' + answerObj[key]);
+      params.push('label:' + answer[key]);
     } else if (key === 'output') {
-      output = answerObj[key];
+      output = answer[key];
     } else {
       params.push('-' + key);
-      params.push(answerObj[key]);
+      params.push(answer[key]);
     }
   });
   if (!output) {
@@ -120,8 +127,21 @@ _inquirer2.default.prompt(createImageQuestions).then(function (answer) {
       if (err) {
         console.log('Error: ' + err.toString());
       } else {
-        console.log('Created! -> ' + answerObj['output']);
+        console.log('Created! -> ' + answer['output']);
       }
     });
   }
+};
+
+_inquirer2.default.prompt(createImageQuestions).then(function (answer) {
+  _inquirer2.default.prompt(fontSelectionModeQuestion).then(function (fontSelection) {
+    var question = fontSelectionQuestions[fontSelection.fontSelectionType];
+    if (question.length > 0) {
+      _inquirer2.default.prompt(question).then(function (fontNameAnswer) {
+        createImage(Object.assign({}, { font: fontNameAnswer.fontName }, createImageMagickParams(answer)));
+      });
+    } else {
+      createImage(createImageMagickParams(answer));
+    }
+  });
 });

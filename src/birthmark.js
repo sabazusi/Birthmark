@@ -20,14 +20,12 @@ const createImageMagickParams = (params) => {
   const {
     outputFileName,
     outputFileType,
-    fontName,
     imageSize,
     embedText,
     textColor,
     backgroundColor
   } = params;
   return {
-    font: fonts.availables.find(f => f.name === fontName).path,
     background: backgroundColor,
     fill: textColor,
     size: imageSize,
@@ -77,40 +75,78 @@ const createImageQuestions = [
     name: 'backgroundColor',
     message: 'Input background color code for image',
     default: '#ffffff'
-  },
-  {
-    type: 'input',
-    name: 'fontName',
-    message: 'Input font name for text',
-    validate: validators.font
   }
 ];
 
-inquirer.prompt(createImageQuestions)
-  .then((answer) => createImageMagickParams(answer))
-  .then((answerObj) => {
-    let params = [];
-    let output = '';
-    Object.keys(answerObj).forEach((key) => {
-      if (key === 'label') {
-        params.push(`label:${answerObj[key]}`);
-      } else if(key === 'output') {
-        output = answerObj[key];
+const fontSelectionModeQuestion = [
+  {
+    type: 'list',
+    name: 'fontSelectionType',
+    message: 'Select font name selection method',
+    choices: [
+      'Use default font by imagemagick',
+      'Input font name directly',
+      'Select font from available fonts list'
+    ]
+  }
+];
+
+const fontSelectionQuestions = {
+  'Use default font by imagemagick': [
+  ],
+  'Input font name directly': [
+    {
+      type: 'input',
+      name: 'fontName',
+      message: 'Input font name',
+      validate: validators.font
+    }
+  ],
+  'Select font from available fonts list': [
+  ]
+};
+
+const createImage = (answer) => {
+  let params = [];
+  let output = '';
+  Object.keys(answer).forEach((key) => {
+    if (key === 'label') {
+      params.push(`label:${answer[key]}`);
+    } else if(key === 'output') {
+      output = answer[key];
+    } else {
+      params.push(`-${key}`);
+      params.push(answer[key]);
+    }
+  });
+  if (!output) {
+    console.log('Error: no output file name...');
+  } else {
+    params.push(output);
+    im.convert(params, (err, stdout) => {
+      if (err) {
+        console.log(`Error: ${err.toString()}`);
       } else {
-        params.push(`-${key}`);
-        params.push(answerObj[key]);
+        console.log(`Created! -> ${answer['output']}`);
       }
     });
-    if (!output) {
-      console.log('Error: no output file name...');
-    } else {
-      params.push(output);
-      im.convert(params, (err, stdout) => {
-        if (err) {
-          console.log(`Error: ${err.toString()}`);
+  }
+};
+
+inquirer.prompt(createImageQuestions)
+  .then((answer) => {
+    inquirer.prompt(fontSelectionModeQuestion)
+      .then((fontSelection) => {
+        const question = fontSelectionQuestions[fontSelection.fontSelectionType];
+        if (question.length > 0) {
+          inquirer.prompt(question)
+            .then((fontNameAnswer) => {
+              createImage(
+                Object.assign({}, {font: fontNameAnswer.fontName}, createImageMagickParams(answer))
+              );
+            });
         } else {
-          console.log(`Created! -> ${answerObj['output']}`);
+          createImage(createImageMagickParams(answer));
         }
-      });
-    }
+      })
   });
