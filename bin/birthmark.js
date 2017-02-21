@@ -35,21 +35,25 @@ var hasMultibyteCharacter = function hasMultibyteCharacter(str) {
 };
 
 var createImageMagickParams = function createImageMagickParams(params) {
-  var outputFileName = params.outputFileName,
+  var fontName = params.fontName,
+      outputFileName = params.outputFileName,
       outputFileType = params.outputFileType,
       imageSize = params.imageSize,
       embedText = params.embedText,
       textColor = params.textColor,
       backgroundColor = params.backgroundColor;
 
-  return {
+  var fontPath = fontName ? { font: _fonts2.default.availables.find(function (f) {
+      return f.name === fontName;
+    }).path } : {};
+  return Object.assign({}, fontPath, {
     background: backgroundColor,
     fill: textColor,
     size: imageSize,
     gravity: 'center',
     label: embedText,
     output: outputFileName + '.' + outputFileType
-  };
+  });
 };
 
 /**
@@ -103,7 +107,14 @@ var fontSelectionQuestions = {
     message: 'Input font name',
     validate: validators.font
   }],
-  'Select font from available fonts list': []
+  'Select font from available fonts list': [{
+    type: 'list',
+    name: 'fontName',
+    message: 'Select font',
+    choices: _fonts2.default.availables.map(function (f) {
+      return f.name;
+    }).sort()
+  }]
 };
 
 var createImage = function createImage(answer) {
@@ -138,7 +149,7 @@ _inquirer2.default.prompt(createImageQuestions).then(function (answer) {
     var question = fontSelectionQuestions[fontSelection.fontSelectionType];
     if (question.length > 0) {
       _inquirer2.default.prompt(question).then(function (fontNameAnswer) {
-        createImage(Object.assign({}, { font: fontNameAnswer.fontName }, createImageMagickParams(answer)));
+        createImage(createImageMagickParams(Object.assign({}, { fontName: fontNameAnswer.fontName }, answer)));
       });
     } else {
       createImage(createImageMagickParams(answer));

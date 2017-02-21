@@ -18,6 +18,7 @@ const hasMultibyteCharacter = (str) => str.match(/^[\u30A0-\u30FF]+$/) === null;
 
 const createImageMagickParams = (params) => {
   const {
+    fontName,
     outputFileName,
     outputFileType,
     imageSize,
@@ -25,14 +26,15 @@ const createImageMagickParams = (params) => {
     textColor,
     backgroundColor
   } = params;
-  return {
+  const fontPath = fontName ? {font: fonts.availables.find(f => f.name === fontName).path} : {};
+  return Object.assign({}, fontPath, {
     background: backgroundColor,
     fill: textColor,
     size: imageSize,
     gravity: 'center',
     label: embedText,
     output: `${outputFileName}.${outputFileType}`
-  };
+  });
 };
 
 /**
@@ -103,6 +105,12 @@ const fontSelectionQuestions = {
     }
   ],
   'Select font from available fonts list': [
+    {
+      type: 'list',
+      name: 'fontName',
+      message: 'Select font',
+      choices: fonts.availables.map(f => f.name).sort()
+    }
   ]
 };
 
@@ -141,9 +149,9 @@ inquirer.prompt(createImageQuestions)
         if (question.length > 0) {
           inquirer.prompt(question)
             .then((fontNameAnswer) => {
-              createImage(
-                Object.assign({}, {font: fontNameAnswer.fontName}, createImageMagickParams(answer))
-              );
+              createImage(createImageMagickParams(
+                Object.assign({}, {fontName: fontNameAnswer.fontName}, answer)
+              ));
             });
         } else {
           createImage(createImageMagickParams(answer));
