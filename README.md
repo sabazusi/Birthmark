@@ -14,5 +14,4 @@ Command line tool for generating image that embedded text.
 #### Generate image with text
 `$ birthmark`
 
-#### Generate image and upload to slack
-`$ birthmark -s`
+<img src="./screenshot.png">
