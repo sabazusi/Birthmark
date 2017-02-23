@@ -15,3 +15,5 @@ Command line tool for generating image that embedded text.
 `$ birthmark`
 
 <img src="./screenshot.png">
+
+<img src="./test.png">
