@@ -88,7 +88,8 @@ const fontSelectionModeQuestion = [
     choices: [
       'Use default font by imagemagick',
       'Input font name directly',
-      'Select font from available fonts list'
+      'Select font from available fonts list',
+      'Select font from available fonts list with initial character'
     ]
   }
 ];
@@ -111,7 +112,24 @@ const fontSelectionQuestions = {
       message: 'Select font',
       choices: fonts.availables.map(f => f.name).sort()
     }
+  ],
+  'Select font from available fonts list with initial character': [
+    {
+      type: 'list',
+      name: 'fontNameInitial',
+      message: 'Select font initial character',
+      choices: Object.keys(fonts.allocated)
+    }
   ]
+};
+
+const selectFontByInitialQuestion = (initial) => {
+  return {
+    type: 'list',
+    name: 'fontName',
+    message: 'Select font',
+    choices: fonts.allocated[initial].map(f => f.name).sort()
+  }
 };
 
 const createImage = (answer) => {
@@ -149,9 +167,18 @@ inquirer.prompt(createImageQuestions)
         if (question.length > 0) {
           inquirer.prompt(question)
             .then((fontNameAnswer) => {
-              createImage(createImageMagickParams(
-                Object.assign({}, {fontName: fontNameAnswer.fontName}, answer)
-              ));
+              if (fontNameAnswer.fontNameInitial) {
+                inquirer.prompt(selectFontByInitialQuestion(fontNameAnswer.fontNameInitial))
+                  .then((fontNameAnswerByInitial) => {
+                    createImage(createImageMagickParams(
+                      Object.assign({}, {fontName: fontNameAnswerByInitial.fontName}, answer)
+                    ));
+                  });
+              } else {
+                createImage(createImageMagickParams(
+                  Object.assign({}, {fontName: fontNameAnswer.fontName}, answer)
+                ));
+              }
             });
         } else {
           createImage(createImageMagickParams(answer));

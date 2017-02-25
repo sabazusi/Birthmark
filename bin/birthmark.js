@@ -96,7 +96,7 @@ var fontSelectionModeQuestion = [{
   type: 'list',
   name: 'fontSelectionType',
   message: 'Select font name selection method',
-  choices: ['Use default font by imagemagick', 'Input font name directly', 'Select font from available fonts list']
+  choices: ['Use default font by imagemagick', 'Input font name directly', 'Select font from available fonts list', 'Select font from available fonts list with initial character']
 }];
 
 var fontSelectionQuestions = {
@@ -114,7 +114,24 @@ var fontSelectionQuestions = {
     choices: _fonts2.default.availables.map(function (f) {
       return f.name;
     }).sort()
+  }],
+  'Select font from available fonts list with initial character': [{
+    type: 'list',
+    name: 'fontNameInitial',
+    message: 'Select font initial character',
+    choices: Object.keys(_fonts2.default.allocated)
   }]
+};
+
+var selectFontByInitialQuestion = function selectFontByInitialQuestion(initial) {
+  return {
+    type: 'list',
+    name: 'fontName',
+    message: 'Select font',
+    choices: _fonts2.default.allocated[initial].map(function (f) {
+      return f.name;
+    }).sort()
+  };
 };
 
 var createImage = function createImage(answer) {
@@ -149,7 +166,13 @@ _inquirer2.default.prompt(createImageQuestions).then(function (answer) {
     var question = fontSelectionQuestions[fontSelection.fontSelectionType];
     if (question.length > 0) {
       _inquirer2.default.prompt(question).then(function (fontNameAnswer) {
-        createImage(createImageMagickParams(Object.assign({}, { fontName: fontNameAnswer.fontName }, answer)));
+        if (fontNameAnswer.fontNameInitial) {
+          _inquirer2.default.prompt(selectFontByInitialQuestion(fontNameAnswer.fontNameInitial)).then(function (fontNameAnswerByInitial) {
+            createImage(createImageMagickParams(Object.assign({}, { fontName: fontNameAnswerByInitial.fontName }, answer)));
+          });
+        } else {
+          createImage(createImageMagickParams(Object.assign({}, { fontName: fontNameAnswer.fontName }, answer)));
+        }
       });
     } else {
       createImage(createImageMagickParams(answer));
