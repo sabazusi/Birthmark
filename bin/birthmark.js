@@ -23,7 +23,7 @@ var validators = _interopRequireWildcard(_validators);
 
 var _question = require('./question');
 
-var _question2 = _interopRequireDefault(_question);
+var questions = _interopRequireWildcard(_question);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -33,7 +33,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 _commander2.default.version('0.1.0').option('-s --slack', 'Create image and upload to slack').parse(process.argv);
 
 var isUploadToSlack = _commander2.default.slack === true;
-var questions = new _question2.default(_fonts2.default);
 
 var createImageMagickParams = function createImageMagickParams(params) {
   var fontName = params.fontName,
@@ -84,16 +83,13 @@ var createImage = function createImage(answer) {
   }
 };
 
-_inquirer2.default.prompt(questions.getDefaultQuestions()).then(function (answer) {
-  _inquirer2.default.prompt([questions.getFontSelectionModeQuestion()]).then(function (fontSelection) {
-    console.log(fontSelection);
-    console.log(questions.getFontSelectionQuestions);
-    console.log(questions.getFontSelectionQuestions());
-    var question = questions.getFontSelectionQuestions()[fontSelection.fontSelectionType];
+_inquirer2.default.prompt(questions.defaultQuestions).then(function (answer) {
+  _inquirer2.default.prompt([questions.fontSelectionModeQuestion]).then(function (fontSelection) {
+    var question = questions.fontSelectionQuestions[fontSelection.fontSelectionType];
     if (question.length > 0) {
       _inquirer2.default.prompt(question).then(function (fontNameAnswer) {
         if (fontNameAnswer.fontNameInitial) {
-          _inquirer2.default.prompt(questions.getSelectFontByInitialQuestion(fontNameAnswer.fontNameInitial)).then(function (fontNameAnswerByInitial) {
+          _inquirer2.default.prompt(questions.selectFontByInitialQuestion(fontNameAnswer.fontNameInitial)).then(function (fontNameAnswerByInitial) {
             createImage(createImageMagickParams(Object.assign({}, { fontName: fontNameAnswerByInitial.fontName }, answer)));
           });
         } else {

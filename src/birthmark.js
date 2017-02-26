@@ -5,7 +5,7 @@ import inquirer from 'inquirer';
 import program from 'commander';
 import fonts from './fonts';
 import * as validators from './validators';
-import Questions from './question';
+import * as questions from './question';
 
 // setup help
 program
@@ -14,7 +14,6 @@ program
   .parse(process.argv);
 
 const isUploadToSlack = program.slack === true;
-const questions = new Questions(fonts);
 
 const createImageMagickParams = (params) => {
   const {
@@ -65,16 +64,16 @@ const createImage = (answer) => {
   }
 };
 
-inquirer.prompt(questions.getDefaultQuestions())
+inquirer.prompt(questions.defaultQuestions)
   .then((answer) => {
-    inquirer.prompt([questions.getFontSelectionModeQuestion()])
+    inquirer.prompt([questions.fontSelectionModeQuestion])
       .then((fontSelection) => {
-        const question = questions.getFontSelectionQuestions()[fontSelection.fontSelectionType];
+        const question = questions.fontSelectionQuestions[fontSelection.fontSelectionType];
         if (question.length > 0) {
           inquirer.prompt(question)
             .then((fontNameAnswer) => {
               if (fontNameAnswer.fontNameInitial) {
-                inquirer.prompt(questions.getSelectFontByInitialQuestion(fontNameAnswer.fontNameInitial))
+                inquirer.prompt(questions.selectFontByInitialQuestion(fontNameAnswer.fontNameInitial))
                   .then((fontNameAnswerByInitial) => {
                     createImage(createImageMagickParams(
                       Object.assign({}, {fontName: fontNameAnswerByInitial.fontName}, answer)
