@@ -5,6 +5,7 @@ import inquirer from 'inquirer';
 import program from 'commander';
 import fonts from './fonts';
 import * as validators from './validators';
+import Questions from './question';
 
 // setup help
 program
@@ -13,8 +14,7 @@ program
   .parse(process.argv);
 
 const isUploadToSlack = program.slack === true;
-
-const hasMultibyteCharacter = (str) => str.match(/^[\u30A0-\u30FF]+$/) === null;
+const questions = new Questions(fonts);
 
 const createImageMagickParams = (params) => {
   const {
@@ -37,100 +37,6 @@ const createImageMagickParams = (params) => {
   });
 };
 
-/**
- * type: create image with strings
- */
-const createImageQuestions = [
-  {
-    type: 'input',
-    name: 'outputFileName',
-    message: 'Input new image file name',
-    validate: validators.empty
-  },
-  {
-    type: 'input',
-    name: 'imageSize',
-    message: 'Input image size',
-    default: '128x128',
-    validate: validators.imageSize
-  },
-  {
-    type: 'list',
-    name: 'outputFileType',
-    message: 'Select image file type',
-    choices: ['jpg', 'png']
-  },
-  {
-    type: 'input',
-    name: 'embedText',
-    message: 'Input string that embed in image',
-    validate: validators.empty
-  },
-  {
-    type: 'input',
-    name: 'textColor',
-    message: 'Input text color code for image',
-    default: '#000000'
-  },
-  {
-    type: 'input',
-    name: 'backgroundColor',
-    message: 'Input background color code for image',
-    default: '#ffffff'
-  }
-];
-
-const fontSelectionModeQuestion = [
-  {
-    type: 'list',
-    name: 'fontSelectionType',
-    message: 'Select font name selection method',
-    choices: [
-      'Use default font by imagemagick',
-      'Input font name directly',
-      'Select font from available fonts list',
-      'Select font from available fonts list with initial character'
-    ]
-  }
-];
-
-const fontSelectionQuestions = {
-  'Use default font by imagemagick': [
-  ],
-  'Input font name directly': [
-    {
-      type: 'input',
-      name: 'fontName',
-      message: 'Input font name',
-      validate: validators.font
-    }
-  ],
-  'Select font from available fonts list': [
-    {
-      type: 'list',
-      name: 'fontName',
-      message: 'Select font',
-      choices: fonts.availables.map(f => f.name).sort()
-    }
-  ],
-  'Select font from available fonts list with initial character': [
-    {
-      type: 'list',
-      name: 'fontNameInitial',
-      message: 'Select font initial character',
-      choices: Object.keys(fonts.allocated)
-    }
-  ]
-};
-
-const selectFontByInitialQuestion = (initial) => {
-  return {
-    type: 'list',
-    name: 'fontName',
-    message: 'Select font',
-    choices: fonts.allocated[initial].map(f => f.name).sort()
-  }
-};
 
 const createImage = (answer) => {
   let params = [];
@@ -159,16 +65,16 @@ const createImage = (answer) => {
   }
 };
 
-inquirer.prompt(createImageQuestions)
+inquirer.prompt(questions.getDefaultQuestions())
   .then((answer) => {
-    inquirer.prompt(fontSelectionModeQuestion)
+    inquirer.prompt([questions.getFontSelectionModeQuestion()])
       .then((fontSelection) => {
-        const question = fontSelectionQuestions[fontSelection.fontSelectionType];
+        const question = questions.getFontSelectionQuestions()[fontSelection.fontSelectionType];
         if (question.length > 0) {
           inquirer.prompt(question)
             .then((fontNameAnswer) => {
               if (fontNameAnswer.fontNameInitial) {
-                inquirer.prompt(selectFontByInitialQuestion(fontNameAnswer.fontNameInitial))
+                inquirer.prompt(questions.getSelectFontByInitialQuestion(fontNameAnswer.fontNameInitial))
                   .then((fontNameAnswerByInitial) => {
                     createImage(createImageMagickParams(
                       Object.assign({}, {fontName: fontNameAnswerByInitial.fontName}, answer)
