@@ -34,6 +34,12 @@ _commander2.default.version('0.1.0').option('-s --slack', 'Create image and uplo
 
 var isUploadToSlack = _commander2.default.slack === true;
 
+var upload = function upload(fileName) {
+  if (isUploadToSlack) {
+    console.log('uploading...');
+  }
+};
+
 _inquirer2.default.prompt(questions.defaultQuestions).then(function (answer) {
   _inquirer2.default.prompt([questions.fontSelectionModeQuestion]).then(function (fontSelection) {
     var question = questions.fontSelectionQuestions[fontSelection.fontSelectionType];
@@ -43,16 +49,16 @@ _inquirer2.default.prompt(questions.defaultQuestions).then(function (answer) {
           _inquirer2.default.prompt(questions.selectFontByInitialQuestion(fontNameAnswer.fontNameInitial)).then(function (fontNameAnswerByInitial) {
             (0, _imagemagick2.default)(Object.assign({}, { font: _fonts2.default.availables.find(function (f) {
                 return f.name === fontNameAnswerByInitial.fontName;
-              }) }, answer));
+              }) }, answer)).then(upload);
           });
         } else {
           (0, _imagemagick2.default)(Object.assign({}, { font: _fonts2.default.availables.find(function (f) {
               return f.name === fontNameAnswer.fontName;
-            }) }, answer));
+            }) }, answer)).then(upload);
         }
       });
     } else {
-      (0, _imagemagick2.default)(createImageMagickParams(answer));
+      (0, _imagemagick2.default)(answer).then(upload);
     }
   });
 });

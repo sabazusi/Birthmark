@@ -39,12 +39,16 @@ const createImage = (input) => {
     console.log('Error: no output file name...');
   } else {
     params.push(output);
-    im.convert(params, (err, stdout) => {
-      if (err) {
-        console.log(`Error: ${err.toString()}`);
-      } else {
-        console.log(`Created! -> ${answer['output']}`);
-      }
+    return new Promise((resolve, reject) => {
+      im.convert(params, (err, stdout) => {
+        if (err) {
+          console.log(`Error: ${err.toString()}`);
+          reject();
+        } else {
+          console.log(`Created! -> ${answer['output']}`);
+          resolve(answer['output']);
+        }
+      });
     });
   }
 };

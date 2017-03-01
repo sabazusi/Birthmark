@@ -15,6 +15,12 @@ program
 
 const isUploadToSlack = program.slack === true;
 
+const upload = (fileName) => {
+  if (isUploadToSlack) {
+    console.log('uploading...');
+  }
+};
+
 inquirer.prompt(questions.defaultQuestions)
   .then((answer) => {
     inquirer.prompt([questions.fontSelectionModeQuestion])
@@ -28,16 +34,16 @@ inquirer.prompt(questions.defaultQuestions)
                   .then((fontNameAnswerByInitial) => {
                     createImage(
                       Object.assign({}, {font: fonts.availables.find(f => f.name === fontNameAnswerByInitial.fontName)}, answer)
-                    );
+                    ).then(upload);
                   });
               } else {
                 createImage(
                   Object.assign({}, {font: fonts.availables.find(f => f.name === fontNameAnswer.fontName)}, answer)
-                );
+                ).then(upload);
               }
             });
         } else {
-          createImage(createImageMagickParams(answer));
+          createImage(answer).then(upload);
         }
       })
   });

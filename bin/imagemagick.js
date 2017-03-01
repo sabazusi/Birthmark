@@ -48,12 +48,16 @@ var createImage = function createImage(input) {
     console.log('Error: no output file name...');
   } else {
     params.push(output);
-    _imagemagick2.default.convert(params, function (err, stdout) {
-      if (err) {
-        console.log('Error: ' + err.toString());
-      } else {
-        console.log('Created! -> ' + answer['output']);
-      }
+    return new Promise(function (resolve, reject) {
+      _imagemagick2.default.convert(params, function (err, stdout) {
+        if (err) {
+          console.log('Error: ' + err.toString());
+          reject();
+        } else {
+          console.log('Created! -> ' + answer['output']);
+          resolve(answer['output']);
+        }
+      });
     });
   }
 };
