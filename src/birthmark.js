@@ -6,6 +6,7 @@ import fonts from './fonts';
 import createImage from './imagemagick';
 import * as validators from './validators';
 import * as questions from './question';
+import emojipacks from 'emojipacks';
 
 // setup help
 program
@@ -16,8 +17,8 @@ program
 const isUploadToSlack = program.slack === true;
 
 const upload = (fileName) => {
-  if (isUploadToSlack) {
-    console.log('uploading...');
+  if (isUploadToSlack || true) {
+  //  emojipacks.upload();
   }
 };
 
