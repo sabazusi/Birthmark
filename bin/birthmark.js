@@ -25,6 +25,10 @@ var _question = require('./question');
 
 var questions = _interopRequireWildcard(_question);
 
+var _emojipacks = require('emojipacks');
+
+var _emojipacks2 = _interopRequireDefault(_emojipacks);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -35,8 +39,8 @@ _commander2.default.version('0.1.0').option('-s --slack', 'Create image and uplo
 var isUploadToSlack = _commander2.default.slack === true;
 
 var upload = function upload(fileName) {
-  if (isUploadToSlack) {
-    console.log('uploading...');
+  if (isUploadToSlack || true) {
+    //  emojipacks.upload();
   }
 };
 

@@ -90,3 +90,24 @@ export const fontSelectionModeQuestion = {
     'Select font from available fonts list with initial character'
   ]
 };
+
+export const slackTeamQuestions = [
+  {
+    type: 'input',
+    name: 'slackTeamDomain',
+    message: 'Input your slack domain name(e.g. hoge.slack.com => input \'hoge\')',
+    validate: validators.empty
+  },
+  {
+    type: 'input',
+    name: 'slackUserMail',
+    message: 'Input email address for your slack account',
+    validate: validators.empty
+  },
+  {
+    type: 'input',
+    name: 'slackUserPassword',
+    message: 'Input password for your slack account',
+    validate: validators.empty
+  }
+];

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.fontSelectionModeQuestion = exports.selectFontByInitialQuestion = exports.fontSelectionQuestions = exports.defaultQuestions = undefined;
+exports.slackTeamQuestions = exports.fontSelectionModeQuestion = exports.selectFontByInitialQuestion = exports.fontSelectionQuestions = exports.defaultQuestions = undefined;
 
 var _validators = require('./validators');
 
@@ -91,3 +91,20 @@ var fontSelectionModeQuestion = exports.fontSelectionModeQuestion = {
   message: 'Select font name selection method',
   choices: ['Use default font by imagemagick', 'Input font name directly', 'Select font from available fonts list', 'Select font from available fonts list with initial character']
 };
+
+var slackTeamQuestions = exports.slackTeamQuestions = [{
+  type: 'input',
+  name: 'slackTeamDomain',
+  message: 'Input your slack domain name(e.g. hoge.slack.com => input \'hoge\')',
+  validate: validators.empty
+}, {
+  type: 'input',
+  name: 'slackUserMail',
+  message: 'Input email address for your slack account',
+  validate: validators.empty
+}, {
+  type: 'input',
+  name: 'slackUserPassword',
+  message: 'Input password for your slack account',
+  validate: validators.empty
+}];
