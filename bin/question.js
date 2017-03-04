@@ -103,7 +103,7 @@ var slackTeamQuestions = exports.slackTeamQuestions = [{
   message: 'Input email address for your slack account',
   validate: validators.empty
 }, {
-  type: 'input',
+  type: 'password',
   name: 'userPassword',
   message: 'Input password for your slack account',
   validate: validators.empty
