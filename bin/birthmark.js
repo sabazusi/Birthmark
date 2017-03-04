@@ -5,6 +5,10 @@ var _inquirer = require('inquirer');
 
 var _inquirer2 = _interopRequireDefault(_inquirer);
 
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
 var _commander = require('commander');
 
 var _commander2 = _interopRequireDefault(_commander);
@@ -12,6 +16,10 @@ var _commander2 = _interopRequireDefault(_commander);
 var _fonts = require('./fonts');
 
 var _fonts2 = _interopRequireDefault(_fonts);
+
+var _localtunnel = require('localtunnel');
+
+var _localtunnel2 = _interopRequireDefault(_localtunnel);
 
 var _imagemagick = require('./imagemagick');
 
@@ -39,8 +47,24 @@ _commander2.default.version('0.1.0').option('-s --slack', 'Create image and uplo
 var isUploadToSlack = _commander2.default.slack === true;
 
 var upload = function upload(fileName) {
-  if (isUploadToSlack || true) {
-    //  emojipacks.upload();
+  if (isUploadToSlack) {
+    _inquirer2.default.prompt(questions.slackTeamQuestions).then(function (slackAnswer) {
+      var teamDomain = slackAnswer.teamDomain,
+          userMail = slackAnswer.userMail,
+          userPassword = slackAnswer.userPassword,
+          emojiName = slackAnswer.emojiName;
+
+      (0, _localtunnel2.default)(5000, function (error, tunnel) {
+        if (error) {
+          console.log('Error!');
+          return;
+        }
+        _emojipacks2.default.upload(teamDomain, userMail, userPassword, [{
+          src: tunnel.url + '/' + fileName,
+          name: emojiName
+        }]);
+      });
+    });
   }
 };
 

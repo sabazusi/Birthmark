@@ -94,17 +94,22 @@ var fontSelectionModeQuestion = exports.fontSelectionModeQuestion = {
 
 var slackTeamQuestions = exports.slackTeamQuestions = [{
   type: 'input',
-  name: 'slackTeamDomain',
+  name: 'teamDomain',
   message: 'Input your slack domain name(e.g. hoge.slack.com => input \'hoge\')',
   validate: validators.empty
 }, {
   type: 'input',
-  name: 'slackUserMail',
+  name: 'userMail',
   message: 'Input email address for your slack account',
   validate: validators.empty
 }, {
   type: 'input',
-  name: 'slackUserPassword',
+  name: 'userPassword',
   message: 'Input password for your slack account',
+  validate: validators.empty
+}, {
+  type: 'input',
+  name: 'emojiName',
+  message: 'Input name for new emoji in your slack team',
   validate: validators.empty
 }];

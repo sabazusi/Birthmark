@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
 import inquirer from 'inquirer';
+import path from 'path';
 import program from 'commander';
 import fonts from './fonts';
+import localtunnel from 'localtunnel';
 import createImage from './imagemagick';
 import * as validators from './validators';
 import * as questions from './question';
@@ -17,8 +19,26 @@ program
 const isUploadToSlack = program.slack === true;
 
 const upload = (fileName) => {
-  if (isUploadToSlack || true) {
-  //  emojipacks.upload();
+  if (isUploadToSlack) {
+    inquirer.prompt(questions.slackTeamQuestions)
+      .then((slackAnswer) => {
+        const {
+          teamDomain,
+          userMail,
+          userPassword,
+          emojiName
+        } = slackAnswer;
+        localtunnel(5000, (error, tunnel) => {
+          if (error) {
+            console.log('Error!');
+            return;
+          }
+          emojipacks.upload(teamDomain, userMail, userPassword, [{
+            src: `${tunnel.url}/${fileName}`,
+            name: emojiName
+          }]);
+        });
+      });
   }
 };
 
