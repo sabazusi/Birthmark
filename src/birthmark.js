@@ -36,7 +36,8 @@ const upload = (fileName) => {
           emojipacks.upload(teamDomain, userMail, userPassword, [{
             src: `${tunnel.url}/${fileName}`,
             name: emojiName
-          }]);
+          }])
+            .then(() => process.exit(0));
         });
       });
   }

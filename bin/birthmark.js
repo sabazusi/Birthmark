@@ -62,7 +62,9 @@ var upload = function upload(fileName) {
         _emojipacks2.default.upload(teamDomain, userMail, userPassword, [{
           src: tunnel.url + '/' + fileName,
           name: emojiName
-        }]);
+        }]).then(function () {
+          return process.exit(0);
+        });
       });
     });
   }
