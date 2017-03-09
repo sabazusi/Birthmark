@@ -9,9 +9,21 @@ var _path = require('path');
 
 var _path2 = _interopRequireDefault(_path);
 
+var _http = require('http');
+
+var _http2 = _interopRequireDefault(_http);
+
 var _commander = require('commander');
 
 var _commander2 = _interopRequireDefault(_commander);
+
+var _finalhandler = require('finalhandler');
+
+var _finalhandler2 = _interopRequireDefault(_finalhandler);
+
+var _serveStatic = require('serve-static');
+
+var _serveStatic2 = _interopRequireDefault(_serveStatic);
 
 var _fonts = require('./fonts');
 
@@ -46,21 +58,27 @@ _commander2.default.version('0.1.0').option('-s --slack', 'Create image and uplo
 
 var isUploadToSlack = _commander2.default.slack === true;
 
-var upload = function upload(fileName) {
+var upload = function upload(filePath) {
   if (isUploadToSlack) {
     _inquirer2.default.prompt(questions.slackTeamQuestions).then(function (slackAnswer) {
       var teamDomain = slackAnswer.teamDomain,
           userMail = slackAnswer.userMail,
           userPassword = slackAnswer.userPassword,
           emojiName = slackAnswer.emojiName;
+      // invoke static local file server
 
+      var serve = (0, _serveStatic2.default)(_path2.default.dirname(filePath));
+      var server = _http2.default.createServer(function (req, res) {
+        serve(req, res, (0, _finalhandler2.default)(req, res));
+      });
+      server.listen(5000);
       (0, _localtunnel2.default)(5000, function (error, tunnel) {
         if (error) {
           console.log('Error!');
           return;
         }
         _emojipacks2.default.upload(teamDomain, userMail, userPassword, [{
-          src: tunnel.url + '/' + fileName,
+          src: tunnel.url + '/' + _path2.default.basename(filePath),
           name: emojiName
         }]).then(function () {
           return process.exit(0);

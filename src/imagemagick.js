@@ -1,4 +1,5 @@
 import im from 'imagemagick';
+import path from 'path';
 
 const construcParams = (params) => {
   const {
@@ -46,7 +47,7 @@ const createImage = (input) => {
           reject();
         } else {
           console.log(`Created! -> ${answer['output']}`);
-          resolve(answer['output']);
+          resolve(path.resolve(answer['output']));
         }
       });
     });

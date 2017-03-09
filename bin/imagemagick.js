@@ -8,6 +8,10 @@ var _imagemagick = require('imagemagick');
 
 var _imagemagick2 = _interopRequireDefault(_imagemagick);
 
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var construcParams = function construcParams(params) {
@@ -55,7 +59,7 @@ var createImage = function createImage(input) {
           reject();
         } else {
           console.log('Created! -> ' + answer['output']);
-          resolve(answer['output']);
+          resolve(_path2.default.resolve(answer['output']));
         }
       });
     });

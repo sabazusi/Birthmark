@@ -2,7 +2,10 @@
 
 import inquirer from 'inquirer';
 import path from 'path';
+import http from 'http';
 import program from 'commander';
+import finalhandler from 'finalhandler';
+import serveStatic from 'serve-static';
 import fonts from './fonts';
 import localtunnel from 'localtunnel';
 import createImage from './imagemagick';
@@ -18,7 +21,7 @@ program
 
 const isUploadToSlack = program.slack === true;
 
-const upload = (fileName) => {
+const upload = (filePath) => {
   if (isUploadToSlack) {
     inquirer.prompt(questions.slackTeamQuestions)
       .then((slackAnswer) => {
@@ -28,13 +31,19 @@ const upload = (fileName) => {
           userPassword,
           emojiName
         } = slackAnswer;
+        // invoke static local file server
+        const serve = serveStatic(path.dirname(filePath));
+        const server = http.createServer((req, res) => {
+          serve(req, res, finalhandler(req, res));
+        });
+        server.listen(5000);
         localtunnel(5000, (error, tunnel) => {
           if (error) {
             console.log('Error!');
             return;
           }
           emojipacks.upload(teamDomain, userMail, userPassword, [{
-            src: `${tunnel.url}/${fileName}`,
+            src: `${tunnel.url}/${path.basename(filePath)}`,
             name: emojiName
           }])
             .then(() => process.exit(0));
