@@ -13,12 +13,13 @@ Command line tool for generating image that embedded text.
 #### Generate image with text
 `$ birthmark`
 
-<img src="./screenshot.png">
+<img src="https://github.com/sabazusi/birthmark/blob/master/screenshot.png?raw=true">
 
-<img src="./test.png">
+<img src="https://github.com/sabazusi/birthmark/blob/master/test.png?raw=true">
 
 
 #### Generate image and upload to slack
 `$ birthmark -s` or `$ birthmark --slack`
 
-<img src="./screenshot_slack.png">
+
+<img src="https://github.com/sabazusi/birthmark/blob/master/screenshot_slack.png?raw=true">
