@@ -6,9 +6,8 @@ Command line tool for generating image that embedded text.
 - [ImageMagick](https://github.com/ImageMagick/ImageMagick "ImageMagick")
 
 ### Install
-***todo: publish to npm***
 
-~~`$ npm install birthmark -g`~~
+`$ npm install birthmark -g`
 
 ### Usage
 #### Generate image with text
