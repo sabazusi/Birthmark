@@ -91,7 +91,7 @@ export const fontSelectionModeQuestion = {
   ]
 };
 
-export const slackTeamQuestions = [
+export const slackTeamQuestions = (emojiName) => [
   {
     type: 'input',
     name: 'teamDomain',
@@ -114,6 +114,6 @@ export const slackTeamQuestions = [
     type: 'input',
     name: 'emojiName',
     message: 'Input name for new emoji in your slack team',
-    validate: validators.empty
+    default: emojiName
   }
 ];

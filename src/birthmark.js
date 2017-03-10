@@ -23,7 +23,7 @@ const isUploadToSlack = program.slack === true;
 
 const upload = (filePath) => {
   if (isUploadToSlack) {
-    inquirer.prompt(questions.slackTeamQuestions)
+    inquirer.prompt(questions.slackTeamQuestions(path.parse(path.basename(filePath)).name))
       .then((slackAnswer) => {
         const {
           teamDomain,

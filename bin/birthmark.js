@@ -60,7 +60,7 @@ var isUploadToSlack = _commander2.default.slack === true;
 
 var upload = function upload(filePath) {
   if (isUploadToSlack) {
-    _inquirer2.default.prompt(questions.slackTeamQuestions).then(function (slackAnswer) {
+    _inquirer2.default.prompt(questions.slackTeamQuestions(_path2.default.parse(_path2.default.basename(filePath)).name)).then(function (slackAnswer) {
       var teamDomain = slackAnswer.teamDomain,
           userMail = slackAnswer.userMail,
           userPassword = slackAnswer.userPassword,

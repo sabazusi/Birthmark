@@ -92,24 +92,26 @@ var fontSelectionModeQuestion = exports.fontSelectionModeQuestion = {
   choices: ['Use default font by imagemagick', 'Input font name directly', 'Select font from available fonts list', 'Select font from available fonts list with initial character']
 };
 
-var slackTeamQuestions = exports.slackTeamQuestions = [{
-  type: 'input',
-  name: 'teamDomain',
-  message: 'Input your slack domain name(e.g. hoge.slack.com => input \'hoge\')',
-  validate: validators.empty
-}, {
-  type: 'input',
-  name: 'userMail',
-  message: 'Input email address for your slack account',
-  validate: validators.empty
-}, {
-  type: 'password',
-  name: 'userPassword',
-  message: 'Input password for your slack account',
-  validate: validators.empty
-}, {
-  type: 'input',
-  name: 'emojiName',
-  message: 'Input name for new emoji in your slack team',
-  validate: validators.empty
-}];
+var slackTeamQuestions = exports.slackTeamQuestions = function slackTeamQuestions(emojiName) {
+  return [{
+    type: 'input',
+    name: 'teamDomain',
+    message: 'Input your slack domain name(e.g. hoge.slack.com => input \'hoge\')',
+    validate: validators.empty
+  }, {
+    type: 'input',
+    name: 'userMail',
+    message: 'Input email address for your slack account',
+    validate: validators.empty
+  }, {
+    type: 'password',
+    name: 'userPassword',
+    message: 'Input password for your slack account',
+    validate: validators.empty
+  }, {
+    type: 'input',
+    name: 'emojiName',
+    message: 'Input name for new emoji in your slack team',
+    default: emojiName
+  }];
+};
