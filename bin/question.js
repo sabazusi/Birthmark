@@ -32,7 +32,7 @@ var defaultQuestions = exports.defaultQuestions = [{
   type: 'list',
   name: 'outputFileType',
   message: 'Select image file type',
-  choices: ['jpg', 'png']
+  choices: ['png', 'jpg']
 }, {
   type: 'input',
   name: 'embedText',
