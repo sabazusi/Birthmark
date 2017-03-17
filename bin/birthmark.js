@@ -56,10 +56,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // setup help
 _commander2.default.version('0.1.0').option('-s --slack', 'Create image and upload to slack').parse(process.argv);
 
-var isUploadToSlack = _commander2.default.slack === true;
-
 var upload = function upload(filePath) {
-  if (isUploadToSlack) {
+  if (_commander2.default.slack) {
     _inquirer2.default.prompt(questions.slackTeamQuestions(_path2.default.parse(_path2.default.basename(filePath)).name)).then(function (slackAnswer) {
       var teamDomain = slackAnswer.teamDomain,
           userMail = slackAnswer.userMail,
@@ -74,8 +72,7 @@ var upload = function upload(filePath) {
       server.listen(5000);
       (0, _localtunnel2.default)(5000, function (error, tunnel) {
         if (error) {
-          console.log('Error!');
-          return;
+          throw new Error('Error!');
         }
         _emojipacks2.default.upload(teamDomain, userMail, userPassword, [{
           src: tunnel.url + '/' + _path2.default.basename(filePath),
@@ -84,6 +81,9 @@ var upload = function upload(filePath) {
           return process.exit(0);
         });
       });
+    }).catch(function (e) {
+      if (e && e.message) console.log(e.message);
+      process.exit(1);
     });
   }
 };

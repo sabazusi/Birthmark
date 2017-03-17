@@ -19,10 +19,8 @@ program
   .option('-s --slack', 'Create image and upload to slack')
   .parse(process.argv);
 
-const isUploadToSlack = program.slack === true;
-
 const upload = (filePath) => {
-  if (isUploadToSlack) {
+  if (program.slack) {
     inquirer.prompt(questions.slackTeamQuestions(path.parse(path.basename(filePath)).name))
       .then((slackAnswer) => {
         const {
@@ -39,8 +37,7 @@ const upload = (filePath) => {
         server.listen(5000);
         localtunnel(5000, (error, tunnel) => {
           if (error) {
-            console.log('Error!');
-            return;
+            throw new Error('Error!');
           }
           emojipacks.upload(teamDomain, userMail, userPassword, [{
             src: `${tunnel.url}/${path.basename(filePath)}`,
@@ -48,6 +45,10 @@ const upload = (filePath) => {
           }])
             .then(() => process.exit(0));
         });
+      })
+      .catch((e) => {
+        if (e && e.message) console.log(e.message);
+        process.exit(1);
       });
   }
 };
